@@ -1,24 +1,28 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+async function fetchRSSFeed() {
+  const rssURL = 'https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@sjlouji10';
+  try {
+    const response = await fetch(rssURL);
+    const data = await response.json();
+    displayFeed(data.items);
+  } catch (error) {
+    console.error('Error fetching the RSS feed:', error);
+  }
+}
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+function displayFeed(items) {
+  const feedContainer = document.getElementById('rss-blogs');
+  items.forEach(item => {
+    const feedItem = document.createElement('div');
+    const imageUrl = item['description'].toString().match(/<img[^>]+src="([^">]+)"/)[1];
+    feedItem.className = 'col-lg-4 col-md-6 d-flex align-items-stretch mt-2';
+    feedItem.innerHTML = `
+        <div class="icon-box">
+          <img src="${imageUrl}" alt="${item.title}" style="width: 100%; height: 50%; object-fit: cover; margin-bottom: 40px">
+          <h4><a href="${item.link}" target="_blank" style="">${item.title}</a></h4>
+        </div>
+        `;
+    feedContainer.appendChild(feedItem);
+  });
+}
 
-setupCounter(document.querySelector('#counter'))
+document.addEventListener('DOMContentLoaded', fetchRSSFeed);
