@@ -67,7 +67,6 @@ h6 {
 }
 
 #header * {
-  transition: ease-in-out 0.3s;
 }
 
 #header h1 {
@@ -124,9 +123,6 @@ h6 {
 
 #header .social-links a:hover {
   background: #0069ff;
-}
-
-#header .social-links-hover:hover {
   color: #fff !important;
 }
 
